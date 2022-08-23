@@ -1,6 +1,6 @@
 # **六角學員 React 新手讀書會 React & API 整合證書任務**
 
-Demo： [https://cofcat456.github.io/react-todoList/]
+Demo： [React-TodoList][https://cofcat456.github.io/react-todoList/]
 
 ## **功能說明**
 > * 登入 API 功能，
