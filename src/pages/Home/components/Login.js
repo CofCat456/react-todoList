@@ -1,10 +1,12 @@
+import { useEffect } from 'react';
+
 import { NavLink, useNavigate } from 'react-router-dom';
 
 import { useForm } from 'react-hook-form';
 
 import MySwal from '../../../components/Swql';
 
-import { setUserData } from '../../../global/constants';
+import { setUserData, getUserData } from '../../../global/constants';
 
 import { LoginApi } from '../../../global/todoApi';
 
@@ -47,6 +49,12 @@ const Login = () => {
             });
         }
     };
+
+    useEffect(() => {
+        if (getUserData() !== null) {
+            navigate('/Todo');
+        }
+    }, []);
 
     const formInputList = [
         {

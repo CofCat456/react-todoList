@@ -210,6 +210,18 @@ const Todo = () => {
     const clearCompletedTodo = async () => {
         let completedIdList = todoList.filter((item) => item.completed_at);
 
+        if (completedIdList.length === 0) {
+            MySwal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+                title: '目前沒有完成項目唷！',
+            });
+        }
+
         for (const item of completedIdList) {
             const { id } = item;
 
@@ -245,7 +257,7 @@ const Todo = () => {
                 </h1>
                 <ul>
                     <li className='todo_sm'>
-                        <a href='#'>{name && <span>{name} 的代辦</span>}</a>
+                        <a>{name ? <span>{name} 的代辦</span> : ''}</a>
                     </li>
                     <li>
                         <NavLink to='/' onClick={Logout}>
