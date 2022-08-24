@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import { NavLink, useNavigate } from 'react-router-dom';
 
 import { useForm } from 'react-hook-form';
 
+import Loading from '../../../components/Loading';
 import MySwal from '../../../components/Swql';
 
 import { setUserData, getUserData } from '../../../global/constants';
@@ -13,6 +14,7 @@ import { LoginApi } from '../../../global/todoApi';
 import FormInput from './FormInput';
 
 const Login = () => {
+    const [isLoading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const {
@@ -22,6 +24,7 @@ const Login = () => {
     } = useForm();
 
     const fetchLogin = async (user) => {
+        setLoading(true);
         const res = await LoginApi(user);
         const data = await res.json();
 
@@ -29,6 +32,7 @@ const Login = () => {
         const { nickname, error } = data;
 
         const authorization = headers.get('authorization');
+        setLoading(false);
 
         if (status === 200) {
             setUserData({
@@ -97,11 +101,13 @@ const Login = () => {
                     className='formControls_btnSubmit'
                     type='submit'
                     value='登入'
+                    disabled={Object.keys(errors).length > 0}
                 />
                 <NavLink className='formControls_btnLink' to='/register'>
                     註冊帳號
                 </NavLink>
             </form>
+            {isLoading ? <Loading /> : ''}
         </>
     );
 };

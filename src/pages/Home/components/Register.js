@@ -1,7 +1,10 @@
+import { useState } from 'react';
+
 import { NavLink } from 'react-router-dom';
 
 import { useForm } from 'react-hook-form';
 
+import Loading from '../../../components/Loading';
 import MySwal from '../../../components/Swql';
 
 import { RegisterApi } from '../../../global/todoApi';
@@ -9,16 +12,21 @@ import { RegisterApi } from '../../../global/todoApi';
 import FormInput from './FormInput';
 
 const Register = () => {
+    const [isLoading, setLoading] = useState(false);
+
     const { register, handleSubmit, watch, formState } = useForm();
 
     const { errors } = formState;
 
     const fetchRegister = async (user) => {
+        setLoading(true);
         const res = await RegisterApi(user);
         const data = await res.json();
 
         const { status } = res;
         const { message, error } = data;
+
+        setLoading(false);
 
         if (status === 201) {
             MySwal.fire({
@@ -119,11 +127,13 @@ const Register = () => {
                     className='formControls_btnSubmit'
                     type='submit'
                     value='註冊帳號'
+                    disabled={Object.keys(errors).length > 0}
                 />
                 <NavLink className='formControls_btnLink' to='/login'>
                     登入
                 </NavLink>
             </form>
+            {isLoading ? <Loading /> : ''}
         </>
     );
 };

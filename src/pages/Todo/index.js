@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
+import Loading from '../../components/Loading';
 import MySwal from '../../components/Swql';
 
 import TodoList from './components/TodoList';
@@ -27,6 +28,7 @@ const Logout = () => {
 };
 
 const Todo = () => {
+    const [isLoading, setLoading] = useState(false);
     const [todoList, setTodoList] = useState([]);
     const [filteredTodoList, setFilteredTodoList] = useState([]);
     const [status, setStatus] = useState('全部');
@@ -41,12 +43,15 @@ const Todo = () => {
     };
 
     const fetchGetTodos = useCallback(() => {
+        setLoading(true);
         const fetchingGetTodos = async () => {
             const res = await GetTodosApi();
             const data = await res.json();
 
             const { status } = res;
             const { todos, message = '' } = data;
+
+            setLoading(false);
 
             if (status === 200) {
                 setTodoList(todos);
@@ -67,8 +72,11 @@ const Todo = () => {
     }, []);
 
     const fetchAddTodo = async () => {
+        setLoading(true);
         setTodoData('');
+
         if (todoData === '') {
+            setLoading(false);
             MySwal.fire({
                 icon: 'error',
                 showConfirmButton: false,
@@ -109,6 +117,8 @@ const Todo = () => {
     };
 
     const fetchDelTodo = async (id) => {
+        setLoading(true);
+
         const res = await deleteTodoApi(id);
 
         const { status } = res;
@@ -139,6 +149,7 @@ const Todo = () => {
     };
 
     const fetchToggleTodo = async (id) => {
+        setLoading(true);
         const res = await toggleTodoApi(id);
         const data = await res.json();
 
@@ -208,9 +219,11 @@ const Todo = () => {
     };
 
     const clearCompletedTodo = async () => {
+        setLoading(true);
         let completedIdList = todoList.filter((item) => item.completed_at);
 
         if (completedIdList.length === 0) {
+            setLoading(false);
             MySwal.fire({
                 toast: true,
                 position: 'top-end',
@@ -319,6 +332,7 @@ const Todo = () => {
                     )}
                 </div>
             </div>
+            {isLoading ? <Loading /> : ''}
         </div>
     );
 };
