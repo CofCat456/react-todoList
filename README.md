@@ -21,6 +21,8 @@ Demo： [React-TodoList](https://cofcat456.github.io/react-todoList/)
 * React Hook Form
 * sweetalert2-react-content
 * FontAwesome
+* Emotion
+* REACT SPINNERS
 * LocalStorage
 
 
