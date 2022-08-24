@@ -43,7 +43,6 @@ const Todo = () => {
     };
 
     const fetchGetTodos = useCallback(() => {
-        setLoading(true);
         const fetchingGetTodos = async () => {
             const res = await GetTodosApi();
             const data = await res.json();
@@ -89,6 +88,8 @@ const Todo = () => {
             content: todoData,
         });
 
+        setLoading(false);
+
         const { status } = res;
 
         if (status === 201) {
@@ -121,6 +122,8 @@ const Todo = () => {
 
         const res = await deleteTodoApi(id);
 
+        setLoading(false);
+
         const { status } = res;
 
         if (status === 200) {
@@ -152,6 +155,8 @@ const Todo = () => {
         setLoading(true);
         const res = await toggleTodoApi(id);
         const data = await res.json();
+
+        setLoading(false);
 
         const { status } = res;
         const { content, completed_at } = data;
@@ -192,6 +197,30 @@ const Todo = () => {
         }
     };
 
+    const clearCompletedTodo = async () => {
+        setLoading(true);
+        let completedIdList = todoList.filter((item) => item.completed_at);
+
+        if (completedIdList.length === 0) {
+            setLoading(false);
+            MySwal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+                title: '目前沒有完成項目唷！',
+            });
+        }
+
+        for (const item of completedIdList) {
+            const { id } = item;
+
+            fetchDelTodo(id);
+        }
+    };
+
     const filterHandler = () => {
         switch (status) {
             case '待完成':
@@ -218,35 +247,12 @@ const Todo = () => {
         ).length;
     };
 
-    const clearCompletedTodo = async () => {
-        setLoading(true);
-        let completedIdList = todoList.filter((item) => item.completed_at);
-
-        if (completedIdList.length === 0) {
-            setLoading(false);
-            MySwal.fire({
-                toast: true,
-                position: 'top-end',
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 1500,
-                timerProgressBar: true,
-                title: '目前沒有完成項目唷！',
-            });
-        }
-
-        for (const item of completedIdList) {
-            const { id } = item;
-
-            fetchDelTodo(id);
-        }
-    };
-
     useEffect(() => {
         filterHandler();
     }, [status, todoList]);
 
     useEffect(() => {
+        setLoading(true);
         fetchGetTodos();
 
         MySwal.fire({
