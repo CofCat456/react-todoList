@@ -1,4 +1,4 @@
-# **六角學員 React 新手讀書會 React & API 整合證書任務**
+# **六角學院 React 新手讀書會 React & API 整合證書任務**
 
 Demo： [React-TodoList](https://cofcat456.github.io/react-todoList/)
 
